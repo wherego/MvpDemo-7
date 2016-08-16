@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import com.demo.mvpdemo.R;
 
-public class IpQueryActivity extends AppCompatActivity implements View.OnClickListener, IpContract.View{
+import rx.Subscription;
+
+public class IpQueryActivity extends AppCompatActivity implements View.OnClickListener, IpContract.View {
     private EditText etIp;
     private EditText etAppKey;
     private EditText etSign;
@@ -17,6 +19,8 @@ public class IpQueryActivity extends AppCompatActivity implements View.OnClickLi
     private TextView tvStatus;
 
     private IpContract.Presenter presenter;
+    private Subscription subscription;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +40,7 @@ public class IpQueryActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         tvStatus.setText("");
-        presenter.queryIp();
+        subscription = presenter.queryIp();
     }
 
     @Override
@@ -57,5 +61,13 @@ public class IpQueryActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void setResult(String result) {
         tvStatus.setText(result);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
+        super.onDestroy();
     }
 }

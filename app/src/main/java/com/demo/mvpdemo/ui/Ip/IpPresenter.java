@@ -4,6 +4,8 @@ import com.demo.mvpdemo.bean.IpBean;
 import com.demo.mvpdemo.http.Network;
 import com.demo.mvpdemo.http.listener.OnSubscriberListener;
 
+import rx.Subscription;
+
 /**
  * Create by zf 16/8/16
  */
@@ -15,8 +17,8 @@ public class IpPresenter implements IpContract.Presenter {
     }
 
     @Override
-    public void queryIp() {
-        Network.getInstance().queryIp(view.getIP(), view.getAppKey(), view.getSign(), new OnSubscriberListener<IpBean>() {
+    public Subscription queryIp() {
+        return Network.getInstance().queryIp(view.getIP(), view.getAppKey(), view.getSign(), new OnSubscriberListener<IpBean>() {
             @Override
             public void onNext(IpBean bean) {
                 view.setResult(bean.toString());
